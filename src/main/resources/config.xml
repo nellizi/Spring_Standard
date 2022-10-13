@@ -3,12 +3,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="car" class="com.fastcampus.ch3.Car"/>
-<!--        <constructor-arg name="color" value="red"/>-->
+    <!--Car클래스의 필드값을 여기서 설정해줄 수 있다. setter 메서드를 할 필요가 없다. -->
+    <!--        <property name="color" value="red"/>   settet 대신 사용 -->
+    <!--        <constructor-arg name="color" value="red"/>   생성자로 하는 방법 -->
 <!--        <constructor-arg name="oil" value="100"/>-->
-<!--        <constructor-arg name="engine" ref="engine"/>-->
+<!--        <constructor-arg name="engine" ref="engine"/>   참조변수이기 때문에 value가 아닌 ref로 해줘야 함. 주소값이니까 -->
 <!--        <constructor-arg name="doors">-->
 <!--            <array value-type="com.fastcampus.ch3.Door">-->
-<!--                <ref bean="door"/>-->
+<!--                <ref bean="door"/>    door는 배열이기 때문에 이렇게 작성 -->
 <!--                <ref bean="door"/>-->
 <!--            </array>-->
 <!--        </constructor-arg>-->
