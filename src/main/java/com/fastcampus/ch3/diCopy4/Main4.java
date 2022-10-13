@@ -3,10 +3,12 @@ package com.fastcampus.ch3.diCopy4;
 
 import com.google.common.reflect.ClassPath;
 import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiersOrPrimitiveType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -14,8 +16,9 @@ import java.util.Set;
 
 
 @Component class Car {
-    Engine engine;
-    Door door;
+
+    @Autowired Engine engine;
+    @Autowired Door door;
 
     @Override
     public String toString() {
@@ -39,10 +42,27 @@ import java.util.Set;
     AppContext() {
         map = new HashMap();
         doComponentScan();
+        doAutowired();
 
     }
 
-    private void doComponentScan() {
+       private void doAutowired() {
+        // map에 저장된 객체의 iv중에 @Autowired가 붙어 있으면
+        // map에서 iv의 타입에 맞는 객체를 찾아서 연결(객체의 주소를 iv에 저장시켜줌)
+           try {
+               for(Object bean : map.values()){
+                   for(Field fld : bean.getClass().getDeclaredFields()){
+                       if(fld.getAnnotation(Autowired.class)!=null){
+                           fld.set(bean, getBean(fld.getType()));
+                       }
+                   }
+               }
+           } catch (IllegalAccessException e) {
+               throw new RuntimeException(e);
+           }
+       }
+
+       private void doComponentScan() {
         // 1. 패키지내의 클래스 목록 가져오기
         // 2. 반복문으로 클래스 하나씩 읽어서 @Component 어노테이션 붙어있는지 확인
         // 3. @Component 붙어있으면 객체 생성해서 map에 저장
@@ -83,8 +103,9 @@ public class Main4 {
         Engine engine = (Engine) ac.getBean("engine");
         Door door = (Door)ac.getBean(Door.class);
 
-        car.engine = engine;
-        car.door = door;
+        // 수동으로 객체 연결
+//        car.engine = engine;
+//        car.door = door;
 
         System.out.println("car = " + car);
         System.out.println("engine = " + engine);
