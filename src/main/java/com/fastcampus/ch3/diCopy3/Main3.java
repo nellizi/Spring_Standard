@@ -21,7 +21,8 @@ import java.util.Set;
 @Component class Truck extends Car {}
 @Component class Engine {}
 
-class AppContext {
+
+   class AppContext {
     Map map;
 
     AppContext() {
@@ -53,8 +54,14 @@ class AppContext {
         }
     }
 
-    Object getBean(String key) {
-        return map.get(key);
+    Object getBean(String key) {   return map.get(key);    } // 이름으로 객체 찾기
+
+    Object getBean(Class clazz){   // 객체 타입으로 찾기
+        for(Object obj : map.values()){
+            if(clazz.isInstance(obj))
+                return obj;
+        }
+        return null;
     }
 }
 
@@ -62,7 +69,9 @@ public class Main3 {
     public static void main(String[] args) throws Exception {
         AppContext ac = new AppContext();
         Car car = (Car) ac.getBean("car");
+        Car car2 = (Car) ac.getBean(Car.class);
         System.out.println("car = " + car);
+        System.out.println("car2 = " + car2);
         Engine engine = (Engine) ac.getBean("engine");
         System.out.println("engine = " + engine);
     }
